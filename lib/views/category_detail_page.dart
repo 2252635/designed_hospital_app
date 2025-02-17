@@ -21,7 +21,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
       'imagePath': 'assets/images/detail.png',
       'author':'作者1',
       'time':'2024-10-1',
-      'content':'正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1'
+      'content':'正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1'
     },
     {
       'title': '标题2', 
@@ -29,7 +29,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
       'imagePath': 'assets/images/detail.png',
       'author':'作者2',
       'time':'2024-10-2',
-      'content':'正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2'
+      'content':'正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2'
     },
     {
       'title': '标题3', 
@@ -37,7 +37,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
       'imagePath': 'assets/images/detail.png',
       'author':'作者3',
       'time':'2024-10-3',
-      'content':'正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3'
+      'content':'正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3'
     },
   ];
 

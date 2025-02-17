@@ -79,14 +79,63 @@ class _DetailViewPageState extends State<DetailViewPage> {
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(widget.cardTitle),
+            padding: const EdgeInsets.fromLTRB(22.0, 16.0, 16.0, 16.0), 
+            child: Text(
+              widget.cardTitle,
+              style: const TextStyle(
+                fontFamily: 'Microsoft Himalaya',
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                height: 20 / 16, 
+                letterSpacing: 0, 
+                color: Color(0xFF404446), 
+              ),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(widget.content),
+            padding: const EdgeInsets.fromLTRB(22.0, 8.0, 16.0, 8.0), 
+            child: Text(
+              widget.author,
+              style: const TextStyle(
+                fontFamily: 'Microsoft Himalaya',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                height: 20 / 14, 
+                letterSpacing: 0, 
+                color: Color(0xFF404446), 
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(22.0, 0, 16.0, 16.0), 
+            child: Text(
+              widget.time,
+              style: const TextStyle(
+                fontFamily: 'Microsoft Himalaya',
+                fontWeight: FontWeight.w400,
+                fontSize: 12,
+                height: 16 / 12, 
+                letterSpacing: 0, 
+                color: Color(0xFF878C9E), 
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24.0, 16.0, 16.0, 16.0), 
+            child: Text(
+              widget.content,
+              style: const TextStyle(
+                fontFamily: 'Microsoft Himalaya',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                height: 20 / 14, 
+                letterSpacing: 0, 
+                color: Color(0xFF404446), 
+              ),
+            ),
           ),
         ],
       ),
