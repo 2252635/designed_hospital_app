@@ -33,6 +33,9 @@ class AppRouter {
             cardTitle: args['cardTitle'],
             description: args['description'],
             imagePath: args['imagePath'],
+            author: args['author'],
+            time: args['time'],
+            content: args['content'],
           ),
         );
       default:

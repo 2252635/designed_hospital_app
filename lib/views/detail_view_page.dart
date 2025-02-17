@@ -7,6 +7,9 @@ class DetailViewPage extends StatefulWidget {
   final String cardTitle;
   final String description;
   final String imagePath;
+  final String author;
+  final String time;
+  final String content;
 
   const DetailViewPage({
     super.key,
@@ -14,6 +17,9 @@ class DetailViewPage extends StatefulWidget {
     required this.cardTitle,
     required this.description,
     required this.imagePath,
+    required this.author,
+    required this.time,
+    required this.content,
   });
 
   @override
@@ -80,7 +86,7 @@ class _DetailViewPageState extends State<DetailViewPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(widget.description),
+            child: Text(widget.content),
           ),
         ],
       ),

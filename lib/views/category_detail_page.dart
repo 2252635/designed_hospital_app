@@ -15,9 +15,30 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
   String _searchQuery = '';
 
   final List<Map<String, String>> _items = [
-    {'title': '标题1', 'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'imagePath': 'assets/images/detail.png'},
-    {'title': '标题2', 'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'imagePath': 'assets/images/detail.png'},
-    {'title': '标题3', 'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'imagePath': 'assets/images/detail.png'},
+    {
+      'title': '标题1', 
+      'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
+      'imagePath': 'assets/images/detail.png',
+      'author':'作者1',
+      'time':'2024-10-1',
+      'content':'正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1正文1'
+    },
+    {
+      'title': '标题2', 
+      'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
+      'imagePath': 'assets/images/detail.png',
+      'author':'作者2',
+      'time':'2024-10-2',
+      'content':'正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2正文2'
+    },
+    {
+      'title': '标题3', 
+      'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
+      'imagePath': 'assets/images/detail.png',
+      'author':'作者3',
+      'time':'2024-10-3',
+      'content':'正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3正文3'
+    },
   ];
 
   List<Map<String, String>> get _filteredItems {
@@ -36,7 +57,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
     });
   }
 
-  Widget buildCard(String title, String description, String imagePath) {
+  Widget buildCard(String title, String description, String imagePath, String author, String time, String content) {
     return Card(
       margin: const EdgeInsets.all(10.0),
       elevation: 0,
@@ -106,7 +127,10 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                                 'appBarTitle': widget.title,      
                                 'cardTitle': title,               
                                 'description': description,    
-                                'imagePath': imagePath            
+                                'imagePath': imagePath,          
+                                'author': author,
+                                'time':time,
+                                'content':content
                               },
                             );
                           },
@@ -210,6 +234,9 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                     item['title']!, 
                     item['description']!, 
                     item['imagePath']!, 
+                    item['author']!, 
+                    item['time']!, 
+                    item['content']!, 
                   );
                 },
               ),
