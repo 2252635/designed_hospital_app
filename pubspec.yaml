@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^1.0.3
-  # video_player: ^2.2.0
+  video_player: ^2.5.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -62,9 +62,9 @@ flutter:
       fonts:
         - asset: assets/fonts/himalaya.ttf
   assets:
-      - assets/images/
-      - assets/videos/
-      - assets/fonts/
+    - assets/images/
+    - assets/videos/
+    - assets/fonts/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
