@@ -12,11 +12,35 @@ class CategoryDetailPage extends StatefulWidget {
 }
 
 class _CategoryDetailPageState extends State<CategoryDetailPage> {
+  String _searchQuery = '';
+
+  final List<Map<String, String>> _items = [
+    {'title': '标题1', 'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'imagePath': 'assets/images/detail.png'},
+    {'title': '标题2', 'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'imagePath': 'assets/images/detail.png'},
+    {'title': '标题3', 'description': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 'imagePath': 'assets/images/detail.png'},
+  ];
+
+  List<Map<String, String>> get _filteredItems {
+    if (_searchQuery.isEmpty) {
+      return _items;
+    } else {
+      return _items.where((item) {
+        return item['title']!.toLowerCase().contains(_searchQuery.toLowerCase());
+      }).toList();
+    }
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+  }
+
   Widget buildCard(String title, String description, String imagePath) {
     return Card(
       margin: const EdgeInsets.all(10.0),
       elevation: 0,
-      color: Colors.white, 
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
@@ -126,7 +150,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white, 
+        backgroundColor: Colors.white,
         title: Text(
           widget.title,
           style: const TextStyle(
@@ -155,10 +179,10 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: '搜索',
                   hintStyle: TextStyle(
                     fontFamily: 'FZYaoTi',
@@ -173,19 +197,19 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
                   filled: true,
                   fillColor: Colors.white,
                 ),
+                onChanged: _onSearchChanged,
               ),
             ),
             const SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
-                itemCount: 3, 
+                itemCount: _filteredItems.length, 
                 itemBuilder: (context, index) {
+                  var item = _filteredItems[index];
                   return buildCard(
-                    // '标题 ${index + 1}', 
-                    '标题',
-                    // '这是描述信息 ${index + 1}',
-                    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                    'assets/images/detail.png', 
+                    item['title']!, 
+                    item['description']!, 
+                    item['imagePath']!, 
                   );
                 },
               ),
