@@ -16,6 +16,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
     return Card(
       margin: const EdgeInsets.all(10.0),
       elevation: 0,
+      color: Colors.white, 
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),

@@ -151,6 +151,7 @@ class _OralHealthPageState extends State<OralHealthPage> {
       },
       child: Card(
         elevation: 0,
+        color: Colors.white, 
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
