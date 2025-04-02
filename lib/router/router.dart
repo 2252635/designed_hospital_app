@@ -4,13 +4,15 @@ import 'package:redesign_version/views/home_page.dart';
 import "package:redesign_version/views/oral_health_page.dart";
 import 'package:redesign_version/views/category_detail_page.dart';
 import 'package:redesign_version/views/detail_view_page.dart';
+import 'package:redesign_version/views/chat_page.dart';
 
 class AppRouter {
   static const String splash = '/';
   static const String home = '/home';
+  static const String chat = '/chat';
   static const String oralHealth = '/oral_health';
   static const String categoryDetail = '/category_detail';
-   static const String detailView = '/detail_view';
+  static const String detailView = '/detail_view';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -25,7 +27,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => CategoryDetailPage(title: args),
         );
-       case detailView:
+      case detailView:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (_) => DetailViewPage(
@@ -38,6 +40,8 @@ class AppRouter {
             content: args['content'],
           ),
         );
+      case chat:
+        return MaterialPageRoute(builder: (_) => ChatPage());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
