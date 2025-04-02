@@ -95,6 +95,9 @@ class _HomePageState extends State<HomePage> {
                          if (_selectedOption == "口腔科普") {
                             Navigator.pushNamed(context, AppRouter.oralHealth);
                           }
+                          else if(_selectedOption == "智能分诊"){
+                            Navigator.pushNamed(context, AppRouter.chat);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
