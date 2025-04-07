@@ -12,16 +12,17 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
-  List<Map<String, String>> _messages = []; 
+  List<Map<String, String>> _messages = [];
 
   int? _age;
   bool _hasSelectedAge = false;
   bool _hasSelectedDeptOption = false;
   bool _useAI = false;
+  String? _selectedPart;  // 存储用户选择的部位
 
   Future<void> _sendMessage() async {
     String userMessage = _controller.text;
-    if (userMessage.isEmpty || !_useAI || _age == null) return;
+    if (userMessage.isEmpty || !_useAI || _age == null || _selectedPart == null) return;
 
     setState(() {
       _messages.add({"role": "user", "text": userMessage});
@@ -30,7 +31,7 @@ class _ChatPageState extends State<ChatPage> {
     _controller.clear();
 
     Map<String, dynamic> requestData = {
-      "part": "牙齿", 
+      "part": _selectedPart, // 这里使用用户选择的部位
       "prompt": userMessage,
       "age":  _age,
       "history": _messages.map((msg) => [msg["role"], msg["text"]]).toList(),
@@ -40,14 +41,11 @@ class _ChatPageState extends State<ChatPage> {
     };
 
     try {
-
       var response = await http.post(
-        Uri.parse("http://101.37.170.240:8000/chat"), 
-        // Uri.parse("http://192.168.147.122/chat"), 
+        Uri.parse("http://101.37.170.240:8000/chat"),
         headers: {"Content-Type": "application/json;charset=UTF-8"},
         body: jsonEncode(requestData),
       );
-
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -61,16 +59,14 @@ class _ChatPageState extends State<ChatPage> {
           _messages.add({"role": "bot", "text": "❌ API 发生错误"});
         });
       }
-
-    }
-    catch (e) {
-        setState(() {
-          _messages.add({"role": "bot", "text": "❌ 无法连接服务器"});
-        });
+    } catch (e) {
+      setState(() {
+        _messages.add({"role": "bot", "text": "❌ 无法连接服务器"});
+      });
     }
   }
 
-   @override
+  @override
   void initState() {
     super.initState();
     _messages.add({
@@ -80,91 +76,127 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildInitialInteraction() {
-  return Container(
-    width: double.infinity,
-    padding: EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black12,
-          blurRadius: 6,
-          offset: Offset(0, 3),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch, 
-      children: [
-        if (!_hasSelectedAge) ...[
-          _buildStyledButton("已满18岁", () {
-            setState(() {
-              _age = 19;
-              _hasSelectedAge = true;
-              _messages.add({"role": "user", "text": "已满18岁"});
-              _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
-            });
-          }),
-          _buildStyledButton("未满18岁", () {
-            setState(() {
-              _age = 17;
-              _hasSelectedAge = true;
-              _messages.add({"role": "user", "text": "未满18岁"});
-              _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
-            });
-          }),
-        ] else if (!_hasSelectedDeptOption) ...[
-          _buildStyledButton("我已有明确就诊科室，点此去挂号", () {
-            setState(() {
-              _hasSelectedDeptOption = true;
-              _useAI = false;
-              _messages.add({"role": "user", "text": "我已有明确就诊科室，点此去挂号"});
-              _messages.add({"role": "bot", "text": "请前往挂号页面。"});
-            });
-          }),
-          _buildStyledButton("我不清楚就诊科室，快速获取", () {
-            setState(() {
-              _hasSelectedDeptOption = true;
-              _useAI = false;
-              _messages.add({"role": "user", "text": "我不清楚就诊科室，快速获取"});
-              _messages.add({"role": "bot", "text": "请根据常见症状快速匹配科室。"});
-            });
-          }),
-          _buildStyledButton("我不清楚就诊科室，AI交流", () {
-            setState(() {
-              _hasSelectedDeptOption = true;
-              _useAI = true;
-              _messages.add({"role": "user", "text": "我不清楚就诊科室，AI交流"});
-              _messages.add({"role": "bot", "text": "请详细描述您的症状，我会为您推荐科室。"});
-            });
-          }),
-        ]
-      ],
-    ),
-  );
-}
-
-Widget _buildStyledButton(String text, VoidCallback onPressed) {
-  return Container(
-    margin: EdgeInsets.symmetric(vertical: 6),
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 14),
-        backgroundColor:  Colors.white,
-        foregroundColor: Colors.black87,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: Color(0xFFE0E0E0), width: 1),
-        ),
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
-      onPressed: onPressed,
-      child: Text(text, style: TextStyle(fontSize: 16)),
-    ),
-  );
-}
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (!_hasSelectedAge) ...[
+            _buildStyledButton("已满18岁", () {
+              setState(() {
+                _age = 19;
+                _hasSelectedAge = true;
+                _messages.add({"role": "user", "text": "已满18岁"});
+                _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
+              });
+            }),
+            _buildStyledButton("未满18岁", () {
+              setState(() {
+                _age = 17;
+                _hasSelectedAge = true;
+                _messages.add({"role": "user", "text": "未满18岁"});
+                _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
+              });
+            }),
+          ] else if (!_hasSelectedDeptOption) ...[
+            _buildStyledButton("我已有明确就诊科室，点此去挂号", () {
+              setState(() {
+                _hasSelectedDeptOption = true;
+                _useAI = false;
+                _messages.add({"role": "user", "text": "我已有明确就诊科室，点此去挂号"});
+                _messages.add({"role": "bot", "text": "请前往挂号页面。"});
+              });
+            }),
+            _buildStyledButton("我不清楚就诊科室，快速获取", () {
+              setState(() {
+                _hasSelectedDeptOption = true;
+                _useAI = false;
+                _messages.add({"role": "user", "text": "我不清楚就诊科室，快速获取"});
+                _messages.add({"role": "bot", "text": "请根据常见症状快速匹配科室。"});
+              });
+            }),
+            _buildStyledButton("我不清楚就诊科室，AI交流", () {
+              setState(() {
+                _hasSelectedDeptOption = true;
+                _useAI = true;
+                _messages.add({"role": "user", "text": "我不清楚就诊科室，AI交流"});
+                _messages.add({"role": "bot", "text": "请选择您感到不适的部位：牙齿、智齿、牙龈、牙根、口腔黏膜、嘴唇、舌头、腮腺、颞下颌关节、颌面部"});
+              });
+            }),
+          ] else if (_useAI && _selectedPart == null) ...[
+            _buildStyledButton("牙齿", () {
+              setState(() {
+                _selectedPart = "牙齿";
+                _messages.add({"role": "user", "text": "牙齿"});
+                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
 
+                _sendMessage();
+              });
+            }),
+            _buildStyledButton("智齿", () {
+              setState(() {
+                _selectedPart = "智齿";
+                _messages.add({"role": "user", "text": "智齿"});
+                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
+
+                _sendMessage();
+              });
+            }),
+            _buildStyledButton("牙龈", () {
+              setState(() {
+                _selectedPart = "牙龈";
+                _messages.add({"role": "user", "text": "牙龈"});
+                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
+
+                _sendMessage();
+              });
+            }),
+            _buildStyledButton("牙根", () {
+              setState(() {
+                _selectedPart = "牙根";
+                _messages.add({"role": "user", "text": "牙根"});
+                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
+
+                _sendMessage();
+              });
+            }),
+          ]
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStyledButton(String text, VoidCallback onPressed) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 6),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: 14),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: Color(0xFFE0E0E0), width: 1),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(text, style: TextStyle(fontSize: 16)),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +249,7 @@ Widget _buildStyledButton(String text, VoidCallback onPressed) {
           ),
         ],
       ),
-            body: Column(
+      body: Column(
         children: [
           Expanded(
             child: ListView.builder(
@@ -249,7 +281,7 @@ Widget _buildStyledButton(String text, VoidCallback onPressed) {
               },
             ),
           ),
-          if (!_hasSelectedDeptOption || !_hasSelectedAge)
+          if (!_hasSelectedDeptOption || !_hasSelectedAge||_selectedPart==null)
             SafeArea(
               child: _buildInitialInteraction(),
             )
