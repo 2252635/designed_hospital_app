@@ -80,81 +80,96 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildInitialInteraction() {
-    if (!_hasSelectedAge) {
-      return Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _age = 19;
-                _hasSelectedAge = true;
-                _messages.add({"role": "user", "text": "已满18岁"});
-                _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
-              });
-            },
-            child: Text("已满18岁"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _age = 17;
-                _hasSelectedAge = true;
-                _messages.add({"role": "user", "text": "未满18岁"});
-                _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
-              });
-            },
-            child: Text("未满18岁"),
-          ),
-        ],
-      );
-    }
+  return Container(
+    width: double.infinity,
+    padding: EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 6,
+          offset: Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch, 
+      children: [
+        if (!_hasSelectedAge) ...[
+          _buildStyledButton("已满18岁", () {
+            setState(() {
+              _age = 19;
+              _hasSelectedAge = true;
+              _messages.add({"role": "user", "text": "已满18岁"});
+              _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
+            });
+          }),
+          _buildStyledButton("未满18岁", () {
+            setState(() {
+              _age = 17;
+              _hasSelectedAge = true;
+              _messages.add({"role": "user", "text": "未满18岁"});
+              _messages.add({"role": "bot", "text": "请问您是否清楚就诊科室？"});
+            });
+          }),
+        ] else if (!_hasSelectedDeptOption) ...[
+          _buildStyledButton("我已有明确就诊科室，点此去挂号", () {
+            setState(() {
+              _hasSelectedDeptOption = true;
+              _useAI = false;
+              _messages.add({"role": "user", "text": "我已有明确就诊科室，点此去挂号"});
+              _messages.add({"role": "bot", "text": "请前往挂号页面。"});
+            });
+          }),
+          _buildStyledButton("我不清楚就诊科室，快速获取", () {
+            setState(() {
+              _hasSelectedDeptOption = true;
+              _useAI = false;
+              _messages.add({"role": "user", "text": "我不清楚就诊科室，快速获取"});
+              _messages.add({"role": "bot", "text": "请根据常见症状快速匹配科室。"});
+            });
+          }),
+          _buildStyledButton("我不清楚就诊科室，AI交流", () {
+            setState(() {
+              _hasSelectedDeptOption = true;
+              _useAI = true;
+              _messages.add({"role": "user", "text": "我不清楚就诊科室，AI交流"});
+              _messages.add({"role": "bot", "text": "请详细描述您的症状，我会为您推荐科室。"});
+            });
+          }),
+        ]
+      ],
+    ),
+  );
+}
 
-    if (!_hasSelectedDeptOption) {
-      return Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _hasSelectedDeptOption = true;
-                _useAI = false;
-                _messages.add({"role": "user", "text": "我已有明确就诊科室，点此去挂号"});
-                _messages.add({"role": "bot", "text": "请前往挂号页面。"});
-              });
-            },
-            child: Text("我已有明确就诊科室，点此去挂号"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _hasSelectedDeptOption = true;
-                _useAI = false;
-                _messages.add({"role": "user", "text": "我不清楚就诊科室，快速获取"});
-                _messages.add({"role": "bot", "text": "请根据常见症状快速匹配科室。"});
-              });
-            },
-            child: Text("我不清楚就诊科室，快速获取"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _hasSelectedDeptOption = true;
-                _useAI = true;
-                _messages.add({"role": "user", "text": "我不清楚就诊科室，AI交流"});
-                _messages.add({"role": "bot", "text": "请详细描述您的症状，我会为您推荐科室。"});
-              });
-            },
-            child: Text("我不清楚就诊科室，AI交流"),
-          ),
-        ],
-      );
-    }
+Widget _buildStyledButton(String text, VoidCallback onPressed) {
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: 6),
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(vertical: 14),
+        backgroundColor:  Colors.white,
+        foregroundColor: Colors.black87,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: Color(0xFFE0E0E0), width: 1),
+        ),
+      ),
+      onPressed: onPressed,
+      child: Text(text, style: TextStyle(fontSize: 16)),
+    ),
+  );
+}
 
-    return SizedBox.shrink(); // 不显示按钮了
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
@@ -219,7 +234,7 @@ class _ChatPageState extends State<ChatPage> {
                       padding: EdgeInsets.all(10),
                       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       decoration: BoxDecoration(
-                        color: message["role"] == "user" ? Colors.blue : Colors.grey[300],
+                        color: message["role"] == "user" ? Colors.blue : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
@@ -235,8 +250,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           if (!_hasSelectedDeptOption || !_hasSelectedAge)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            SafeArea(
               child: _buildInitialInteraction(),
             )
           else
