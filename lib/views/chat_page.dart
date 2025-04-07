@@ -23,9 +23,9 @@ class _ChatPageState extends State<ChatPage> {
     _controller.clear();
 
     Map<String, dynamic> requestData = {
-      "part": "牙齿", // 你可以根据需求修改
+      "part": "牙齿", 
       "prompt": userMessage,
-      "age": 25, // 你可以改成动态值
+      "age": 25, 
       "history": _messages.map((msg) => [msg["role"], msg["text"]]).toList(),
       "max_length": 2048,
       "top_p": 0.7,
@@ -33,14 +33,9 @@ class _ChatPageState extends State<ChatPage> {
     };
 
     try {
-      // var response = await http.post(
-      //   Uri.parse("http://127.0.0.1:8000/chat"),
-      //   headers: {"Content-Type": "application/json"},
-      //   body: jsonEncode(requestData),
-      // );
 
       var response = await http.post(
-        Uri.parse("http://10.0.2.2:8000/chat"), 
+        Uri.parse("http://101.37.170.240:8000/chat"), 
         // Uri.parse("http://192.168.147.122/chat"), 
         headers: {"Content-Type": "application/json;charset=UTF-8"},
         body: jsonEncode(requestData),
@@ -60,23 +55,6 @@ class _ChatPageState extends State<ChatPage> {
         });
       }
 
-    //   if (response.statusCode == 200) {
-    //         // 确保在解析响应时指定UTF-8编码
-    //         var data = utf8.decode(response.bodyBytes); // 使用 utf8 解码响应内容
-    //         var jsonData = jsonDecode(data); // 解析 JSON
-
-    //         String botMessage = jsonData["response"] ?? "❌ 无效的响应";
-
-    //         setState(() {
-    //           _messages.add({"role": "bot", "text": botMessage});
-    //         });
-    //       } else {
-    //         setState(() {
-    //           _messages.add({"role": "bot", "text": "❌ API 发生错误"});
-    //         });
-    //   }
-      
-    // }
     }
     catch (e) {
         setState(() {
@@ -111,7 +89,6 @@ class _ChatPageState extends State<ChatPage> {
                         message["text"] ?? "",
                         style: TextStyle(
                           color: message["role"] == "user" ? Colors.white : Colors.black,
-                          fontFamily: "Himalaya" 
                           ),
                       ),
                     ),
