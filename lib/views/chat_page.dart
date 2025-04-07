@@ -132,51 +132,60 @@ class _ChatPageState extends State<ChatPage> {
                 _hasSelectedDeptOption = true;
                 _useAI = true;
                 _messages.add({"role": "user", "text": "我不清楚就诊科室，AI交流"});
-                _messages.add({"role": "bot", "text": "请选择您感到不适的部位：牙齿、智齿、牙龈、牙根、口腔黏膜、嘴唇、舌头、腮腺、颞下颌关节、颌面部"});
+                _messages.add({"role": "bot", "text": "请选择您感到不适的部位。"});
               });
             }),
           ] else if (_useAI && _selectedPart == null) ...[
-            _buildStyledButton("牙齿", () {
-              setState(() {
-                _selectedPart = "牙齿";
-                _messages.add({"role": "user", "text": "牙齿"});
-                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
-
-                _sendMessage();
-              });
-            }),
-            _buildStyledButton("智齿", () {
-              setState(() {
-                _selectedPart = "智齿";
-                _messages.add({"role": "user", "text": "智齿"});
-                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
-
-                _sendMessage();
-              });
-            }),
-            _buildStyledButton("牙龈", () {
-              setState(() {
-                _selectedPart = "牙龈";
-                _messages.add({"role": "user", "text": "牙龈"});
-                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
-
-                _sendMessage();
-              });
-            }),
-            _buildStyledButton("牙根", () {
-              setState(() {
-                _selectedPart = "牙根";
-                _messages.add({"role": "user", "text": "牙根"});
-                _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
-
-                _sendMessage();
-              });
-            }),
+            if(_age!>=18)...[
+             _buildAIButtons(),
+            ]
+            else ...[
+              _buildStyledButton("牙齿", () {
+                setState(() {
+                  _selectedPart = "牙齿";
+                  _messages.add({"role": "user", "text": "牙齿"});
+                  _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
+                  _sendMessage();
+                });
+              }),
+              _buildStyledButton("更多其他症状请于儿童口腔就诊", () {
+                setState(() {
+                  _messages.add({"role": "user", "text": "更多其他症状请于儿童口腔就诊"});
+                  _messages.add({"role": "bot", "text": "请前往儿童口腔科就诊。"});
+                });
+              }),
+            ]
           ]
         ],
       ),
     );
   }
+
+Widget _buildAIButtons() {
+  List<String> parts = [
+    "牙齿", "智齿", "牙龈", "牙根", "口腔黏膜", "嘴唇", "舌头", "腮腺", "颞下颌关节", "颌面部","整体口腔"
+  ];
+
+  return Container(
+    height: 200,  
+    padding: EdgeInsets.symmetric(vertical: 6), 
+    child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: parts.map((part) {
+          return _buildStyledButton(part, () {
+            setState(() {
+              _selectedPart = part;
+              _messages.add({"role": "user", "text": part});
+              _messages.add({"role": "bot", "text": "请描述您的症状，我会为您推荐科室。"});
+              _sendMessage();
+            });
+          });
+        }).toList(),
+      ),
+    ),
+  );
+}
 
   Widget _buildStyledButton(String text, VoidCallback onPressed) {
     return Container(
