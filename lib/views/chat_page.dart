@@ -24,6 +24,9 @@ class _ChatPageState extends State<ChatPage> {
     String userMessage = _controller.text;
     if (userMessage.isEmpty || !_useAI || _age == null || _selectedPart == null) return;
 
+  
+
+
     setState(() {
       _messages.add({"role": "user", "text": userMessage});
     });
@@ -124,7 +127,7 @@ class _ChatPageState extends State<ChatPage> {
                 _hasSelectedDeptOption = true;
                 _useAI = false;
                 _messages.add({"role": "user", "text": "我不清楚就诊科室，快速获取"});
-                _messages.add({"role": "bot", "text": "请根据常见症状快速匹配科室。"});
+                Navigator.pushNamed(context, AppRouter.quickGetDept);
               });
             }),
             _buildStyledButton("我不清楚就诊科室，AI交流", () {
