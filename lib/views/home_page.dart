@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart'; // 引入视频播放器
 import 'package:redesign_version/router/router.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,57 +11,71 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? _selectedOption;
+  late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    _selectedOption = "智能分诊"; 
+    _selectedOption = "智能分诊";
+
+    // 初始化视频播放器
+    _controller = VideoPlayerController.asset('assets/videos/3.mp4')
+      ..initialize().then((_) {
+        _controller.setLooping(true);
+        _controller.setVolume(0.0); // 静音
+        _controller.play(); // 自动播放
+        setState(() {}); // 刷新 UI
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // 释放资源
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 173, 216, 230), 
+      backgroundColor: const Color.fromARGB(255, 173, 216, 230),
       body: Container(
-        padding: const EdgeInsets.all(0), 
+        padding: const EdgeInsets.all(0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start, 
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 50), 
+            const SizedBox(height: 50),
             const Padding(
-              padding: EdgeInsets.only(left: 20.0), // 添加左边距
+              padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 '口腔AI数字人导诊系统',
                 style: TextStyle(
-                  fontFamily: 'FZYaoTi', 
-                  fontSize: 32, 
-                  fontWeight: FontWeight.w400, 
-                  height: 1.5, 
-                  letterSpacing: -1.9, 
-                  color: Color(0xFF054A80), 
+                  fontFamily: 'FZYaoTi',
+                  fontSize: 32,
+                  fontWeight: FontWeight.w400,
+                  height: 1.5,
+                  letterSpacing: -1.9,
+                  color: Color(0xFF054A80),
                 ),
                 textAlign: TextAlign.left,
               ),
             ),
-            
             const Padding(
-              padding: EdgeInsets.only(left: 20.0), 
+              padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 '请在下方选择您的业务类型',
                 style: TextStyle(
-                  fontFamily: 'Himalaya', 
-                  fontSize: 16, 
-                  fontWeight: FontWeight.w400, 
-                  height: 1.5, 
-                  color: Color(0xFF054A80), 
+                  fontFamily: 'Himalaya',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  height: 1.5,
+                  color: Color(0xFF054A80),
                 ),
               ),
             ),
             const SizedBox(height: 40),
-
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildServiceOption("智能分诊"),
                 _buildServiceOption("口腔科普"),
@@ -68,34 +83,33 @@ class _HomePageState extends State<HomePage> {
                 _buildServiceOption("健康追踪管理"),
               ],
             ),
-            
             const SizedBox(height: 30),
-
             Expanded(
               child: Stack(
-                alignment: Alignment.bottomRight, 
+                alignment: Alignment.bottomRight,
                 children: [
                   Align(
                     alignment: Alignment.bottomRight,
                     child: SizedBox(
                       width: 375,
-                      height: 600, 
-                      child: Image.asset(
-                        'assets/images/human.png', 
-                        fit: BoxFit.cover,
-                      ),
+                      height: 600,
+                      child: _controller.value.isInitialized
+                          ? AbsorbPointer(
+                              absorbing: true, // 禁止用户交互
+                              child: VideoPlayer(_controller),
+                            )
+                          : const Center(child: CircularProgressIndicator()),
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20), 
+                      padding: const EdgeInsets.only(bottom: 20),
                       child: ElevatedButton(
                         onPressed: () {
-                         if (_selectedOption == "口腔科普") {
+                          if (_selectedOption == "口腔科普") {
                             Navigator.pushNamed(context, AppRouter.oralHealth);
-                          }
-                          else if(_selectedOption == "智能分诊"){
+                          } else if (_selectedOption == "智能分诊") {
                             Navigator.pushNamed(context, AppRouter.chat);
                           }
                         },
@@ -129,12 +143,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildServiceOption(String title) {
-    final bool isSelected = _selectedOption == title; 
+    final bool isSelected = _selectedOption == title;
 
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedOption = title; 
+          _selectedOption = title;
         });
       },
       child: Column(
@@ -142,20 +156,20 @@ class _HomePageState extends State<HomePage> {
           Text(
             title,
             style: const TextStyle(
-              fontFamily: 'Himalaya', 
+              fontFamily: 'Himalaya',
               fontSize: 16,
               fontWeight: FontWeight.w400,
               color: Color(0xFF054A80),
             ),
           ),
-          const SizedBox(height: 8), 
+          const SizedBox(height: 8),
           Align(
-            alignment: Alignment.centerLeft,  
+            alignment: Alignment.centerLeft,
             child: Container(
               width: 8,
-              height: 8, 
+              height: 8,
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF0A94FF) : Colors.white, 
+                color: isSelected ? const Color(0xFF0A94FF) : Colors.white,
                 shape: BoxShape.circle,
               ),
             ),
